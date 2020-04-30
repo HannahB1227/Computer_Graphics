@@ -4,8 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.Scanner;
 
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import static javax.swing.JOptionPane.YES_OPTION;
 
 public class Main {
@@ -18,7 +18,6 @@ public class Main {
     private static JMenu menu, menu2;
     private static JMenuItem open, save, exit, bT, bS, bR, scl, rot;
     private static JTextField ta;
-    private static int rgb2 = Color.CYAN.getRGB();
     private static int rgb1 = Color.GREEN.getRGB();
     private static int rgb5 = Color.WHITE.getRGB();
     private static int[][] datalines = new int[100][4];
@@ -339,6 +338,7 @@ public class Main {
             br.close();
         } catch (IOException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(frame, "Error: Cannot open " + filename, "Error", ERROR_MESSAGE);
         } //catch
         displayPixels(datalines, num);
         return num;
@@ -355,6 +355,7 @@ public class Main {
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(frame, "Error: Cannot output to " + filename, "Error", ERROR_MESSAGE);
         } //catch
     } //outputLines
 
@@ -497,14 +498,24 @@ public class Main {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == open) {
                 filename = JOptionPane.showInputDialog(frame, "Which file should be opened? ", "Open File", JOptionPane.PLAIN_MESSAGE);
-                num = inputLines(datalines, num);
-                frame.update(frame.getGraphics());
-                frame.setVisible(true);
+                if (!filename.equals("")) {
+                    num = inputLines(datalines, num);
+                    frame.update(frame.getGraphics());
+                    frame.setVisible(true);
+                } //if
+                else {
+                    JOptionPane.showMessageDialog(frame, "Error: No file name entered.", "Error", ERROR_MESSAGE);
+                } //else
             } //if
             else if (e.getSource() == save) {
                 filename = JOptionPane.showInputDialog(frame, "Which file should be written to? ", "Save File", JOptionPane.PLAIN_MESSAGE);
-                outputLines(datalines, num);
-                JOptionPane.showMessageDialog(frame, "Data saved to file " + filename);
+                if (!filename.equals("")) {
+                    outputLines(datalines, num);
+                    JOptionPane.showMessageDialog(frame, "Data saved to file " + filename);
+                } //if
+                else {
+                    JOptionPane.showMessageDialog(frame, "Error: No file name entered.", "Error", ERROR_MESSAGE);
+                } //else
             } //else-if
             else if (e.getSource() == exit) {
                 int exitQA = JOptionPane.showConfirmDialog(frame, "Are you sure you want to exit?", "Exit", JOptionPane.YES_NO_OPTION);
